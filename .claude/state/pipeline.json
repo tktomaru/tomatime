@@ -1,0 +1,70 @@
+{
+  "feature": "time-server",
+  "phase": "done",
+  "approvals": {
+    "request": "b9e7db8b0d59118e78fc992bd510ade220483ac0cbc3444e0486121cebbf157e",
+    "requirements": "aaaab92c7d82970623027ace03e2dd54caf42c43f38d6f3f5925c295cd78b7c9"
+  },
+  "history": [
+    {
+      "at": "2026-11-24T14:47:41.447Z",
+      "from": null,
+      "to": "request",
+      "note": "start"
+    },
+    {
+      "at": "2026-11-24T15:19:10.130Z",
+      "from": "request",
+      "to": "request_review",
+      "note": "advance"
+    },
+    {
+      "at": "2026-11-24T15:31:19.287Z",
+      "from": "request_review",
+      "to": "requirements",
+      "note": "advance"
+    },
+    {
+      "at": "2026-11-24T15:49:49.002Z",
+      "from": "requirements",
+      "to": "requirements_review",
+      "note": "advance"
+    },
+    {
+      "at": "2026-11-24T15:53:37.763Z",
+      "from": "requirements_review",
+      "to": "request",
+      "note": "back"
+    },
+    {
+      "at": "2026-11-24T15:59:57.322Z",
+      "from": "request",
+      "to": "request_review",
+      "note": "advance"
+    },
+    {
+      "at": "2026-11-24T16:01:04.215Z",
+      "from": "request_review",
+      "to": "requirements",
+      "note": "advance"
+    },
+    {
+      "at": "2026-11-24T16:14:08.644Z",
+      "from": "requirements",
+      "to": "requirements_review",
+      "note": "advance"
+    },
+    {
+      "at": "2026-11-24T16:21:56.453Z",
+      "from": "requirements_review",
+      "to": "implementation",
+      "note": "advance"
+    },
+    {
+      "at": "2026-11-24T22:22:06.559Z",
+      "from": "implementation",
+      "to": "done",
+      "note": "advance"
+    }
+  ]
+}

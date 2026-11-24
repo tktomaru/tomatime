@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+tmp/
+.claude/settings.local.json
+.claude/harness/unlock
+logs/*
+!logs/.gitkeep

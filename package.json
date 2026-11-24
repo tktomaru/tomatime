@@ -1,0 +1,20 @@
+{
+  "name": "tomatime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HTTP でアクセスされたら現在時刻（日本時間）を返すサーバー",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.8.0"
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "概要": "pipeline.mjs advance が、現在のフェーズの検査を上から順に実行する。最初に失敗した項目の理由を表示し、現在のフェーズに留まる。",
+  "文書形式": "対象は文書フォルダの直下。README.md と章ファイルが必要。章ファイル名は NNN_見出し.md とし、001 から欠番・重複のない連番にする。名前の見出し部分は、本文で最初に現れる「## 」の見出しと一致させる。章名に空白や Windows で使えない文字は使えない。",
+  "確認方法の補足": [
+    "文書形式の判定は lib.mjs の checkDocShape が行う。テンプレートの必須章、README.md の目次、本文の意味、AI レビューの完了は人または運用手順で確認する。",
+    "ID は章ファイルを連結した本文から正規表現で探す。表の行・列や対応の意味までは判定しない。functionalRequirementId には左境界がないため、NFR-1 に含まれる FR-1 も拾う。",
+    "編集前の権限・パス・命名の検査は guard-write.mjs と guard-bash.mjs で行う。guard-write.mjs のフェーズ別制限はコメントアウトされている。"
+  ],
+  "patterns": {
+    "requestListHeading": "^## 要求一覧",
+    "openQuestionsHeading": "^## 確認事項",
+    "requestId": "REQ-\\d+",
+    "functionalRequirementId": "FR-\\d+(?!-AC)(?!\\d)",
+    "acceptanceConditionSuffix": "-AC-\\d+",
+    "acceptanceConditionId": "FR-\\d+-AC-\\d+",
+    "idEnd": "(?!\\d)",
+    "testFile": "\\.test\\.[cm]?[jt]s$"
+  },
+  "phases": {
+    "request": [
+      {
+        "check": "document-shape",
+        "document": "request",
+        "判定": "要求書フォルダが文書形式の条件を満たす。"
+      },
+      {
+        "check": "document-pattern",
+        "document": "request",
+        "pattern": "requestListHeading",
+        "flags": "m",
+        "error": "の章ファイルに「## 要求一覧」の見出しがありません",
+        "判定": "章ファイルに「## 要求一覧」で始まる行がある。"
+      },
+      {
+        "check": "document-pattern",
+        "document": "request",
+        "pattern": "requestId",
+        "error": "に要求 ID（REQ-n）がありません",
+        "判定": "章ファイルに REQ-n が少なくとも一つある。"
+      },
+      {
+        "check": "document-pattern",
+        "document": "request",
+        "pattern": "openQuestionsHeading",
+        "flags": "m",
+        "error": "の章ファイルに「## 確認事項」の見出しがありません（なければ「なし」と書く）",
+        "判定": "章ファイルに「## 確認事項」で始まる行がある。"
+      }
+    ],
+    "request_review": [
+      {
+        "check": "approval",
+        "判定": "要求書の承認が記録され、承認時と現在の SHA-256 が一致する。ハッシュは README.md を含む直下の全ファイルの名前と内容から計算する。承認の返信は user-prompt.mjs が記録する。"
+      }
+    ],
+    "requirements": [
+      {
+        "check": "document-shape",
+        "document": "requirements",
+        "判定": "要件定義書フォルダが文書形式の条件を満たす。"
+      },
+      {
+        "check": "functional-requirement-acceptance",
+        "判定": "要件定義書に FR-n が少なくとも一つあり、見つかった各 ID に同じ番号で始まる FR-n-AC-m がある。"
+      },
+      {
+        "check": "request-coverage",
+        "判定": "要求書に出てくる各 REQ-n が要件定義書にも出てくる。REQ-1 と REQ-10 は区別する。"
+      }
+    ],
+    "requirements_review": [
+      {
+        "check": "approval",
+        "判定": "要件定義書の承認が記録され、承認時と現在の SHA-256 が一致する。"
+      }
+    ],
+    "implementation": [
+      {
+        "check": "npm-scripts",
+        "scripts": ["typecheck", "test", "start"],
+        "判定": "package.json があり、scripts に指定されたコマンドの定義が入っている。"
+      },
+      {
+        "check": "acceptance-tests",
+        "directory": "test",
+        "判定": "test/ を再帰的に検索し、.test.ts や .test.js など testFile に一致するファイルが一つ以上ある。要件定義書にある各 FR-n-AC-m がテストファイル内にもある。ID はファイル全体から探すので、テスト名への記載は運用で確認する。"
+      },
+      {
+        "check": "document-shape",
+        "document": "design",
+        "errorPrefix": "設計書: ",
+        "判定": "設計書フォルダが文書形式の条件を満たす。"
+      },
+      {
+        "check": "document-shape",
+        "document": "review",
+        "errorPrefix": "レビュー結果（code-reviewer の返却を章ごとに保存したもの）: ",
+        "判定": "レビュー結果フォルダが文書形式の条件を満たす。"
+      },
+      {
+        "check": "npm-command",
+        "command": "npm run typecheck",
+        "判定": "プロジェクトのルートで型検査を実行し、終了コードが 0 になる。"
+      },
+      {
+        "check": "npm-command",
+        "command": "npm test",
+        "判定": "プロジェクトのルートでテストを実行し、終了コードが 0 になる。"
+      }
+    ]
+  }
+}

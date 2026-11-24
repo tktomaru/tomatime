@@ -1,0 +1,18 @@
+# tomaTime をローカルの Docker で起動する compose ファイル
+# 起動: docker compose -f docker-compose-tomatime.yml up --build
+# 停止: docker compose -f docker-compose-tomatime.yml down
+#
+# - ビルドは既存の Dockerfile を使う（コンテナ内の待ち受けアドレスは Dockerfile の ENV TOMATIME_HOST=0.0.0.0）
+# - ホスト側はループバック（127.0.0.1）にだけ公開し、ホストの全アドレスには公開しない（D-26、FR-12）
+# - TZ や /etc/localtime は設定しない。コンテナの時計にも手を加えない（TS-4、NFR-2）
+# - 常駐・自動起動（restart）は要求の範囲外（REQ-9）のため設定しない
+name: tomatime
+
+services:
+  tomatime:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tomatime:local
+    ports:
+      - "127.0.0.1:3000:3000"
